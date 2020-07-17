@@ -15,8 +15,26 @@ RSpec.describe "As a visitor" do
       expect(page).to have_content("Mechanic: #{mechanic1.name}")
       expect(page).to have_content("Years of Experience: #{mechanic1.experience}")
       expect(page).to have_content("Current rides they’re working on:")
-      expect(page).to have_content("Mechanic: #{ride1.name}")
-      expect(page).to have_content("Mechanic: #{ride2.name}")
+      expect(page).to have_content("#{ride1.name}")
+      expect(page).to have_content("#{ride2.name}")
+    end
+
+    it 'user can add to mechanics worload' do
+      mechanic1 = Mechanic.create({name: "Nick", experience: 6})
+      park1 = Park.create({name: "Adventure Land", admission_price: 50})
+      ride1 = park1.rides.create({name: "Scream Machine", thrill_rating: 10, park_id: park1.id})
+      ride2 = park1.rides.create({name: "Carousel Fun Time", thrill_rating: 5, park_id: park1.id})
+      RideMechanic.create(ride_id: ride1.id, mechanic_id: mechanic1.id)
+      RideMechanic.create(ride_id: ride2.id, mechanic_id: mechanic1.id)
+
+      # fill in form
+
+      # expect page to have new ride listed... theres no time!! AHHHHHH
+
+      visit "mechanics/#{mechanic1.id}"
+
+      fill_in('name', with: 'ride')
+      expect(page).to have_content("#{ride.name}")
 
 
     end
